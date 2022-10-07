@@ -33,6 +33,7 @@ $ git merge upstream/master # merge in rob's changes
 ```bash
 $ git status # what's changed in my repo
 $ git add [filename] # stage a change
+$ git add -p # interactively stage some chunks in all changed files. Y to accept changes
 $ git commit -m "[commit message]" # commiting a change set with a message
 $ git push # push change sets to remote origin
 $ git log # show recent commits
