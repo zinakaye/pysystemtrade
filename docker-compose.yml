@@ -1,0 +1,6 @@
+version: '2'
+services:
+  mongodb:
+    image: mongo:4.4.17-focal
+    volumes:
+      - $HOME/Documents/Trading/data/mongodb/:/data/db
