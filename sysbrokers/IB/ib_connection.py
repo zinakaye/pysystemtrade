@@ -28,12 +28,15 @@ class connectionIB(object):
         ib_port: int = arg_not_supplied,
         account: str = arg_not_supplied,
         log=logtoscreen("connectionIB"),
+        readonly: bool = False
     ):
         """
         :param client_id: client id
-        :param ipaddress: IP address of machine running IB Gateway or TWS. If not passed then will get from private config file, or defaults
-        :param port: Port listened to by IB Gateway or TWS
+        :param ib_ipaddress: IP address of machine running IB Gateway or TWS. If not passed then will get from private config file, or defaults
+        :param ib_port: Port listened to by IB Gateway or TWS
+        :param account ???
         :param log: logging object
+        :param readOnly: Connect to the IB API as read-only.
         :param mongo_db: mongoDB connection
         """
         self._log = log
@@ -66,10 +69,10 @@ class connectionIB(object):
             self.log.error(
                 "Broker account ID not found in private config - may cause issues"
             )
-            ib.connect(ipaddress, port, clientId=client_id)
+            ib.connect(ipaddress, port, clientId=client_id, readonly=readonly)
         else:
             ## conncect using account
-            ib.connect(ipaddress, port, clientId=client_id, account=account)
+            ib.connect(ipaddress, port, clientId=client_id, account=account, readonly=readonly)
 
         # Sometimes takes a few seconds to resolve... only have to do this once per process so no biggie
         time.sleep(5)

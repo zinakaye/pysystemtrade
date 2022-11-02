@@ -281,9 +281,10 @@ class dataBlob(object):
         attempts = 0
         failed_ids = []
         client_id = self._get_next_client_id_for_ib()
+        readonly = True
         while True:
             try:
-                ib_conn = connectionIB(client_id, log=self.log)
+                ib_conn = connectionIB(client_id, readonly=readonly, log=self.log)
                 for id in failed_ids:
                     self.db_ib_broker_client_id.release_clientid(id)
                 return ib_conn

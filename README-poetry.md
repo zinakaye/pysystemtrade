@@ -23,11 +23,39 @@ $ mkdir -p ../data/mongodb
 $ mkdir ../echos
 $ mkdir ../mongo_backup
 ```
+1. Add `SCRIPT_PATH` to `PATH`
+1. Symlink `.zprofile` to `.profile`
+```bash
+$ ln -s ~/.zprofile ~/.profile
+```
 
 ### Installing mongo
 
 1. Install Docker desktop
 1. `$ docker-compose up`
+
+### Install mongo shell for testing
+```bash
+$ brew tap mongodb/brew
+$ brew install mongosh
+```
+
+### Connect to the docker container (testing)
+```bash
+$ docker exec -it pysystemtrade-mongodb-1 /bin/bash
+```
+
+### Connecting with the mongo shell (testing)
+```bash
+$ mongosh # Test that you can connect to the mongod running in Docker.
+```
+
+### Installing IB API gateway
+1. Download from [here](https://interactivebrokers.github.io/#)
+1. Unzip manually (as MacOS will fail)
+```bash
+$ unzip -d ./ ~/Downloads/[...filename]
+```
 
 ## Running
 ```bash
@@ -35,6 +63,21 @@ $ cd ~/Documents/Trading/pysystemtrade
 $ poetry shell
 $ poetry run jupyter notebook
 $ docker-compose up
+```
+
+### Load historic data
+```bash
+$ poetry shell
+$ python sysinit/futures/repocsv_spotfx_prices.py
+$ python sysproduction/update_fx_prices.py
+```
+
+#### Examine historic data
+```mongosh
+$ mongosh
+test> use arctic_production;
+switched to db arctic_production
+arctic_production> db.spotfx_prices.find({})
 ```
 
 ## Running the Dashboard
@@ -72,4 +115,9 @@ Switch to API
 Tick the Connect via sockets checkbox
 Note the port
 Edit the private config yaml
-Put the port into the config
+Put the port into the config (it's different to gateway--see below)
+
+### IBKR API Gateway
+
+Can only run one instance at once (Gateway or TWS)
+Gateway port is 4001--set this in config
