@@ -71,6 +71,11 @@ $ poetry shell
 $ python sysinit/futures/repocsv_spotfx_prices.py
 $ python sysproduction/update_fx_prices.py
 ```
+or
+```
+% poetry run python -m sysinit.futures.repocsv_spotfx_prices
+% poetry run python -m sysinit.futures.repocsv_adjusted_prices
+```
 
 #### Examine historic data
 ```mongosh
@@ -78,8 +83,29 @@ $ mongosh
 test> use arctic_production;
 switched to db arctic_production
 arctic_production> db.spotfx_prices.find({})
+arctic_production> db.futures_adjusted_prices.versions.find({})
 ```
 
+### Load configuration
+
+_Note: Rob mentions that some of this [configuration](https://github.com/zinakaye/pysystemtrade/blob/master/data/futures/csvconfig/instrumentconfig.csv) may be wrong (as he doesn't use it). Best take a look and maybe update the config and reimport._
+
+```bash
+% poetry run python -m sysinit.futures.repocsv_instrument_config
+```
+
+What is roll configuration?
+
+```bash
+% poetry run python -m sysinit.futures.roll_parameters_csv_mongo
+```
+
+#### Examine configuration
+```mongo
+test> use production;
+production> db.futures_instruments.find();
+```
+r
 ## Running the Dashboard
 ```bash
 $ cd ~/Documents/Trading/pysystemtrade
@@ -121,3 +147,8 @@ Put the port into the config (it's different to gateway--see below)
 
 Can only run one instance at once (Gateway or TWS)
 Gateway port is 4001--set this in config
+
+## @TODO
+
+- We've imported [Rob's instrument configutration](https://github.com/zinakaye/pysystemtrade/blob/master/data/futures/csvconfig/instrumentconfig.csv) which he says " I don't actually trade or get prices for. Any configuration information for these may not be accurate and you use it at your own risk". Take a look and decide if we need to maintain our own instrument list.
+- Do we know what [roll configuration](https://github.com/zinakaye/pysystemtrade/blob/master/docs/data.md#roll-parameter-configuration) is?
